@@ -1,0 +1,12 @@
+apiVersion: 1
+
+datasources:
+  - name: MQTT
+    type: grafana-mqtt-datasource
+    access: proxy
+    orgId: 1
+    uid: "acfd55ff-520d-4dd9-85f5-75aa03db1397"
+    jsonData:
+      uri: "tcp://emqx:1883"
+    isDefault: true
+    editable: true
