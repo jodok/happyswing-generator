@@ -1,0 +1,370 @@
+[
+    {
+        "id": "0eedd753f361bb4c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8eaf2a1c4660fc1e",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "2a2bb2d232292543",
+        "type": "debug",
+        "z": "0eedd753f361bb4c",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "5b32fc5c31804444",
+        "type": "function",
+        "z": "0eedd753f361bb4c",
+        "name": "swings",
+        "func": "const ts = msg.payload;\nconst swings = [\"swing1\", \"swing2\", \"swing3\", \"swing4\", \"swing5\", \"swing6\"];\n\nconst l = 2.5; // length of the swing in meters\nconst g = 9.81; // acceleration due to gravity in m/s^2\n\nlet msgs = [];\n\nfor (const swing of swings) {\n    let msg = {};\n    msg.payload = {};\n    msg.payload['ay'] = 0; // we assume y always 0\n    msg.payload['ts'] = ts;\n    msg.topic = swing\n\n    const start = flow.get(`${swing}_start`) || 0;\n    if (start == 0) {\n        // swing has not yet started\n        msg.payload['ax'] = 0;\n        msg.payload['az'] = g;\n    } else {\n        const theta0 = flow.get(`${swing}_theta0`) * Math.PI / 180 || 0.25 * Math.PI;  // convert to rad, default 45°\n        const t = (ts - start) / 1000; // convert to s\n\n        // calculate the current angle based on the time\n        const theta = theta0 * Math.cos(Math.sqrt(g / l) * t); \n\n        msg.payload['ax'] = -g * theta;\n        msg.payload['az'] = g * Math.cos(theta);\n    }\n    msgs.push(msg)\n}\n\nreturn [msgs];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 480,
+        "wires": [
+            [
+                "2a2bb2d232292543",
+                "1596b1332cb2d325"
+            ]
+        ]
+    },
+    {
+        "id": "7b0995ee4b6d7559",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "timer",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "0.1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 480,
+        "wires": [
+            [
+                "5b32fc5c31804444"
+            ]
+        ]
+    },
+    {
+        "id": "4148ff5d6e67e48d",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "stop all",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 180,
+        "y": 40,
+        "wires": [
+            [
+                "846ebd6169832f52"
+            ]
+        ]
+    },
+    {
+        "id": "846ebd6169832f52",
+        "type": "function",
+        "z": "0eedd753f361bb4c",
+        "name": "set start",
+        "func": "let swings = [\"swing1\", \"swing2\", \"swing3\", \"swing4\", \"swing5\", \"swing6\"];\nlet delay = 0.53; // delay when swings start\n\n// only one swing\nif (swings.includes(msg.topic)) {\n    swings = [ msg.topic ]\n    delay = 0\n}\nconsole.log(msg.topic);\nconsole.log(swings);\nlet offset = 0.0;\nfor (const swing of swings) {\n    offset += delay;\n    flow.set(`${swing}_start`, msg.payload);\n};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0734ed6cb09617b4",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "start all",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 80,
+        "wires": [
+            [
+                "846ebd6169832f52"
+            ]
+        ]
+    },
+    {
+        "id": "cf635f5c75ae0532",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "swing1",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "swing1",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "846ebd6169832f52"
+            ]
+        ]
+    },
+    {
+        "id": "55bd937cfea2cf69",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "swing2",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "swing2",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 180,
+        "wires": [
+            [
+                "846ebd6169832f52"
+            ]
+        ]
+    },
+    {
+        "id": "9f57de12b689513f",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "swing3",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "swing3",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 220,
+        "wires": [
+            [
+                "846ebd6169832f52"
+            ]
+        ]
+    },
+    {
+        "id": "7c34c99afb75ecf7",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "swing4",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "swing4",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 260,
+        "wires": [
+            [
+                "846ebd6169832f52"
+            ]
+        ]
+    },
+    {
+        "id": "ccac2bf3eb2a9999",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "swing5",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "swing5",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "846ebd6169832f52"
+            ]
+        ]
+    },
+    {
+        "id": "b003ba2cee67833a",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "swing6",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "swing6",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 340,
+        "wires": [
+            [
+                "846ebd6169832f52"
+            ]
+        ]
+    },
+    {
+        "id": "1596b1332cb2d325",
+        "type": "mqtt out",
+        "z": "0eedd753f361bb4c",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "8eaf2a1c4660fc1e",
+        "x": 530,
+        "y": 480,
+        "wires": []
+    }
+]

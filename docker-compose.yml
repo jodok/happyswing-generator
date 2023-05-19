@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  node-red:
+    image: nodered/node-red:latest
+    build: Dockerfile
+    environment:
+      - TZ=Europe/Vienna
+    ports:
+      - "1880:1880"
+    networks:
+      - node-red-net
+    volumes:
+      - ./data/node-red:/data
+
+networks:
+  node-red-net:
