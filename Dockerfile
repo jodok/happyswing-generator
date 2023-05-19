@@ -5,6 +5,8 @@ FROM nodered/node-red
 COPY data/node-red/package.json .
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production
 
+ENV TZ=Europe/Vienna
+
 # Copy _your_ Node-RED project files into place
 # NOTE: This will only work if you DO NOT later mount /data as an external volume.
 #       If you need to use an external volume for persistence then

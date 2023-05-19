@@ -1,19 +1,42 @@
 version: "3.7"
 
 services:
-  node-red:
+  nodered:
     image: nodered/node-red:latest
-    build: Dockerfile
+    container_name: nodered
     environment:
       - TZ=Europe/Vienna
     ports:
       - "1880:1880"
     networks:
-      - node-red-net
+      - happyswing-net
     volumes:
-      - ./data/node-red:/data
+      - ./data/nodered:/data
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  emqx:
+    image: emqx:5.0.24
+    container_name: emqx
+    environment:
+      - EMQX_NODE_NAME=emqx@emqx.happyswing.local
+      - EMQX_NODE__COOKIE=3d62b58f44ba91fbbdd0fc2bbf59619ba61bd410058c035d6f29b68f64cf21ef
+    networks:
+      - happyswing-net
+    healthcheck:
+      test: [ "CMD", "/opt/emqx/bin/emqx_ctl", "status" ]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8084:8084
+      - 8883:8883
+      - 18083:18083
+    volumes:
+      - ./data/emqx:/opt/emqx/data
+
 networks:
-  node-red-net:
+  happyswing-net:
+    name: happyswing-net
