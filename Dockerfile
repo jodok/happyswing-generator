@@ -12,5 +12,5 @@ ENV TZ=Europe/Vienna
 #       If you need to use an external volume for persistence then
 #       copy your settings and flows files to that volume instead.
 COPY data/node-red/settings.js /data/settings.js
-COPY data/node-red/flows_cred.json /data/flows_cred.json
+#COPY data/node-red/flows_cred.json /data/flows_cred.json
 COPY data/node-red/flows.json /data/flows.json

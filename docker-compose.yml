@@ -3,7 +3,7 @@ version: "3.7"
 services:
   node-red:
     image: nodered/node-red:latest
-    container_name: nodered
+    container_name: node-red
     environment:
       - TZ=Europe/Vienna
       - NODE_RED_CREDENTIAL_SECRET=ccbbfca7789f30ee14630b26faf46d8dTAc
