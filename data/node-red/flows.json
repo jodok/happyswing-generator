@@ -11,7 +11,7 @@
         "id": "8eaf2a1c4660fc1e",
         "type": "mqtt-broker",
         "name": "",
-        "broker": "localhost",
+        "broker": "host.docker.internal",
         "port": "1883",
         "clientid": "",
         "autoConnect": true,
@@ -35,38 +35,20 @@
         "sessionExpiry": ""
     },
     {
-        "id": "2a2bb2d232292543",
-        "type": "debug",
-        "z": "0eedd753f361bb4c",
-        "name": "debug 3",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 540,
-        "y": 540,
-        "wires": []
-    },
-    {
         "id": "5b32fc5c31804444",
         "type": "function",
         "z": "0eedd753f361bb4c",
         "name": "swings",
-        "func": "const ts = msg.payload;\nconst swings = [\"swing1\", \"swing2\", \"swing3\", \"swing4\", \"swing5\", \"swing6\"];\n\nconst l = 2.5; // length of the swing in meters\nconst g = 9.81; // acceleration due to gravity in m/s^2\n\nlet msgs = [];\n\nfor (const swing of swings) {\n    let msg = {};\n    msg.payload = {};\n    msg.payload['ay'] = 0; // we assume y always 0\n    msg.payload['ts'] = ts;\n    msg.topic = swing\n\n    const start = flow.get(`${swing}_start`) || 0;\n    if (start == 0) {\n        // swing has not yet started\n        msg.payload['ax'] = 0;\n        msg.payload['az'] = g;\n    } else {\n        const theta0 = flow.get(`${swing}_theta0`) * Math.PI / 180 || 0.25 * Math.PI;  // convert to rad, default 45°\n        const t = (ts - start) / 1000; // convert to s\n\n        // calculate the current angle based on the time\n        const theta = theta0 * Math.cos(Math.sqrt(g / l) * t); \n\n        msg.payload['ax'] = -g * theta;\n        msg.payload['az'] = g * Math.cos(theta);\n    }\n    msgs.push(msg)\n}\n\nreturn [msgs];",
+        "func": "const ts = msg.payload;\nconst swings = [\"s1\", \"s2\", \"s3\", \"s4\", \"s5\", \"s6\"];\n\nconst l = 2.5; // length of the swing in meters\nconst g = 9.81; // acceleration due to gravity in m/s^2\n\nlet msgs = [];\n\nfor (const swing of swings) {\n    let msg = {};\n    msg.topic = swing\n    msg.payload = {\n        'acc_x': 0,\n        'acc_y': 0,\n        'acc_z': g,\n        'rot_x': 0,\n        'rot_y': 0,\n        'rot_z': 0,\n        'ts': ts,\n    }\n\n    const start = flow.get(`${swing}_start`) || 0;\n    if (start != 0 && start <= ts) {\n        const theta0 = flow.get(`${swing}_theta0`) * Math.PI / 180 || 0.25 * Math.PI;  // convert to rad, default 45°\n        const t = (ts - start) / 1000; // convert to s\n\n        // calculate the current angle based on the time\n        const theta = theta0 * Math.cos(Math.sqrt(g / l) * t); \n\n        msg.payload['acc_x'] = -g * theta;\n        msg.payload['acc_z'] = g * Math.cos(theta);\n    }\n    msgs.push(msg)\n}\n\nreturn [msgs];",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 320,
-        "y": 480,
+        "x": 640,
+        "y": 220,
         "wires": [
             [
-                "2a2bb2d232292543",
                 "1596b1332cb2d325"
             ]
         ]
@@ -92,8 +74,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
-        "y": 480,
+        "x": 490,
+        "y": 220,
         "wires": [
             [
                 "5b32fc5c31804444"
@@ -134,17 +116,15 @@
         "type": "function",
         "z": "0eedd753f361bb4c",
         "name": "set start",
-        "func": "let swings = [\"swing1\", \"swing2\", \"swing3\", \"swing4\", \"swing5\", \"swing6\"];\nlet delay = 0.53; // delay when swings start\n\n// only one swing\nif (swings.includes(msg.topic)) {\n    swings = [ msg.topic ]\n    delay = 0\n}\nconsole.log(msg.topic);\nconsole.log(swings);\nlet offset = 0.0;\nfor (const swing of swings) {\n    offset += delay;\n    flow.set(`${swing}_start`, msg.payload);\n};\n",
-        "outputs": 1,
+        "func": "let swings = [\"s1\", \"s2\", \"s3\", \"s4\", \"s5\", \"s6\"];\nlet delay = 0.53; // delay between the start of the swings\n\n// if swing is set in topic, start only one swing\nif (swings.includes(msg.topic)) {\n    swings = [ msg.topic ]\n    delay = 0\n}\nlet offset = 0.0;\nfor (const swing of swings) {\n    offset += delay;\n    flow.set(`${swing}_start`, msg.payload);\n};\n",
+        "outputs": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 420,
         "y": 80,
-        "wires": [
-            []
-        ]
+        "wires": []
     },
     {
         "id": "0734ed6cb09617b4",
@@ -162,12 +142,12 @@
         ],
         "repeat": "",
         "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
+        "once": true,
+        "onceDelay": "1",
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
+        "x": 180,
         "y": 80,
         "wires": [
             [
@@ -193,10 +173,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "swing1",
+        "topic": "s1",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
+        "x": 190,
         "y": 140,
         "wires": [
             [
@@ -222,10 +202,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "swing2",
+        "topic": "s2",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
+        "x": 190,
         "y": 180,
         "wires": [
             [
@@ -251,10 +231,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "swing3",
+        "topic": "s3",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
+        "x": 190,
         "y": 220,
         "wires": [
             [
@@ -280,10 +260,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "swing4",
+        "topic": "s4",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
+        "x": 190,
         "y": 260,
         "wires": [
             [
@@ -309,10 +289,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "swing5",
+        "topic": "s5",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
+        "x": 190,
         "y": 300,
         "wires": [
             [
@@ -338,10 +318,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "swing6",
+        "topic": "s6",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
+        "x": 190,
         "y": 340,
         "wires": [
             [
@@ -363,8 +343,8 @@
         "correl": "",
         "expiry": "",
         "broker": "8eaf2a1c4660fc1e",
-        "x": 530,
-        "y": 480,
+        "x": 790,
+        "y": 220,
         "wires": []
     }
 ]

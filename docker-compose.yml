@@ -12,6 +12,8 @@ services:
       - node-red-net
     volumes:
       - ./data/node-red:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
   node-red-net:
