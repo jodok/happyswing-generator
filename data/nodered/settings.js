@@ -42,7 +42,7 @@ module.exports = {
      * lost.
      */
     //credentialSecret: "a-secret-key",
-    credentialSecret: "ccbbfca7789f30ee14630b26faf46d8dTAc=",
+    credentialSecret: process.env.NODE_RED_CREDENTIAL_SECRET,
 
     /** By default, the flow JSON will be formatted over multiple lines making
      * it easier to compare changes when using version control.
