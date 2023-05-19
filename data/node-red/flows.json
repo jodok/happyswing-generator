@@ -143,7 +143,7 @@
         "type": "function",
         "z": "0eedd753f361bb4c",
         "name": "set start",
-        "func": "let swings = [\"s1\", \"s2\", \"s3\", \"s4\", \"s5\", \"s6\"];\nlet delay = 0.53; // delay between the start of the swings\n\n// if swing is set in topic, start only one swing\nif (swings.includes(msg.topic)) {\n    swings = [ msg.topic ]\n    delay = 0\n}\nlet offset = 0.0;\nfor (const swing of swings) {\n    offset += delay;\n    flow.set(`${swing}_start`, msg.payload);\n};\n",
+        "func": "let swings = [\"s1\", \"s2\", \"s3\", \"s4\", \"s5\", \"s6\"];\nlet delay = 0.53; // delay between the start of the swings\n\nconst ts = msg.payload;\n\n// if swing is set in topic, start only one swing\nif (swings.includes(msg.topic)) {\n    swings = [ msg.topic ]\n    delay = 0\n}\nlet offset = 0.0;\nfor (const swing of swings) {\n    if (ts != 0) {\n        offset += delay*1000;\n    }\n    flow.set(`${swing}_start`, msg.payload + offset);\n};\n",
         "outputs": 0,
         "noerr": 0,
         "initialize": "",

@@ -9,9 +9,15 @@ boards sending accelerometer data while swinging.
 
 ## How to run locally and develop
 
-To just start node-red: `docker compose up`
+To just start node-red: `docker compose up node-red`
 
-If you want to start all services: `docker compose up node-red emqx`
+If you want to start all services: `docker compose up -d`
+
+## Services
+
+- Node-Red: <http://localhost:1880>
+- EMQX: <http://localhost:18083>
+- Grafana: <http://localhost:3000>
 
 ## How to use in another project
 
