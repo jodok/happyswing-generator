@@ -18,7 +18,7 @@ services:
 
   emqx:
     image: emqx:5.0.24
-    container_name: emqx
+    container_name: emqx-generator
     environment:
       - EMQX_NODE_NAME=emqx@emqx.happyswing.local
       - EMQX_NODE__COOKIE=3d62b58f44ba91fbbdd0fc2bbf59619ba61bd410058c035d6f29b68f64cf21ef
@@ -35,8 +35,8 @@ services:
       - 8084:8084
       - 8883:8883
       - 18083:18083
-    volumes:
-      - ./data/emqx:/opt/emqx/data
+    profiles:
+      - donotstart
 
 networks:
   happyswing-net:

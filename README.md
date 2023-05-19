@@ -9,7 +9,9 @@ boards sending accelerometer data while swinging.
 
 ## How to run locally and develop
 
-`docker compose up node-red`
+To just start node-red: `docker compose up`
+
+If you want to start all services: `docker compose up node-red emqx`
 
 ## How to use in another project
 
