@@ -1,0 +1,11 @@
+$TTL 60
+@           IN      SOA    ns1.happyswing.at. hostmaster.happyswing.at. (
+                           5                     ; Serial
+                           604800                ; Refresh
+                           86400                 ; Retry
+                           2419200               ; Expire
+                           604800 )              ; Negative Cache TTL
+            IN      NS     ns1.happyswing.at.
+
+ns1.happyswing.at.         IN      A      192.168.1.254
+mqtt.happyswing.at.        IN      A      192.168.1.254

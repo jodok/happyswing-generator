@@ -13,11 +13,12 @@ To just start node-red: `docker compose up node-red`
 
 If you want to start all services: `docker compose up -d`
 
-## Services
+## Services and web interfaces
 
 - Node-Red: <http://localhost:1880>
-- EMQX: <http://localhost:18083>
-- Grafana: <http://localhost:3000>
+- EMQX: <http://localhost:18083>, use client mqttx.app, user: admin, password: public
+- Grafana: <http://localhost:3000>, user: admin, password: password
+- Bind (DNS): Port 53
 
 ## How to use in another project
 

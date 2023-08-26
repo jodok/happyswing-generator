@@ -84,6 +84,7 @@
         "id": "7b0995ee4b6d7559",
         "type": "inject",
         "z": "0eedd753f361bb4c",
+        "d": true,
         "name": "timer",
         "props": [
             {
