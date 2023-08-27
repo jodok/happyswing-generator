@@ -8,4 +8,6 @@ $TTL 60
             IN      NS     ns1.happyswing.at.
 
 ns1.happyswing.at.         IN      A      192.168.1.254
+
+raspberry.happyswing.at.   IN      A      192.168.1.253
 mqtt.happyswing.at.        IN      A      192.168.1.254

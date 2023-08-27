@@ -8,6 +8,14 @@
         "env": []
     },
     {
+        "id": "ca954522561608c1",
+        "type": "tab",
+        "label": "CB",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "8eaf2a1c4660fc1e",
         "type": "mqtt-broker",
         "name": "",
@@ -89,10 +97,6 @@
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
         "repeat": "0.1",
@@ -374,5 +378,234 @@
         "x": 790,
         "y": 220,
         "wires": []
+    },
+    {
+        "id": "b82e3be123c6e104",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "l1",
+        "payload": "254",
+        "payloadType": "num",
+        "x": 670,
+        "y": 400,
+        "wires": [
+            [
+                "2f8c2635feec6e38"
+            ]
+        ]
+    },
+    {
+        "id": "2f8c2635feec6e38",
+        "type": "mqtt out",
+        "z": "0eedd753f361bb4c",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1e34ffbd22e2f3bd",
+        "x": 970,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "2582279438e8dc90",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "l1",
+        "payload": "85",
+        "payloadType": "num",
+        "x": 670,
+        "y": 440,
+        "wires": [
+            [
+                "2f8c2635feec6e38"
+            ]
+        ]
+    },
+    {
+        "id": "353a8d8d98518b6b",
+        "type": "function",
+        "z": "0eedd753f361bb4c",
+        "name": "function 1",
+        "func": "const ts = msg.payload;\nconst swings = [\"l1\"];\n\nconst l = 2.5; // length of the swing in meters\nconst g = 9.81; // acceleration due to gravity in m/s^2\n\nlet msgs = [];\n\nfor (const swing of swings) {\n    let msg = {};\n    msg.topic = swing\n\n    const duration = 3\n    const lower = 85 \n    const high = 254\n    const scal = 2 * Math.PI / duration\n    const t = (ts/1000*scal)\n\n    msg.payload = Math.round ( ((Math.cos(t) + 1) / 2 ) * (high -lower) + lower )\n\n    msgs.push(msg)\n}\n \n\nreturn msgs;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 500,
+        "wires": [
+            [
+                "2f8c2635feec6e38"
+            ]
+        ]
+    },
+    {
+        "id": "f6869390d052cb39",
+        "type": "inject",
+        "z": "0eedd753f361bb4c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "0.1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "l1",
+        "payload": "",
+        "payloadType": "date",
+        "x": 620,
+        "y": 500,
+        "wires": [
+            [
+                "353a8d8d98518b6b"
+            ]
+        ]
+    },
+    {
+        "id": "fde441519f1bcd99",
+        "type": "ui_chart",
+        "z": "ca954522561608c1",
+        "name": "",
+        "group": "",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 510,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a7f8cb778a6ebcc5",
+        "type": "mqtt in",
+        "z": "ca954522561608c1",
+        "name": "",
+        "topic": "sw-0",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "1e34ffbd22e2f3bd",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 260,
+        "wires": [
+            [
+                "595e8b80b0f5bb56"
+            ]
+        ]
+    },
+    {
+        "id": "595e8b80b0f5bb56",
+        "type": "csv",
+        "z": "ca954522561608c1",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 530,
+        "y": 360,
+        "wires": [
+            [
+                "686e7b2cf215fb09"
+            ]
+        ]
+    },
+    {
+        "id": "686e7b2cf215fb09",
+        "type": "file",
+        "z": "ca954522561608c1",
+        "name": "",
+        "filename": "~/tmp/test.csv",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 760,
+        "y": 360,
+        "wires": [
+            []
+        ]
     }
 ]
