@@ -439,10 +439,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "l1",
-        "payload": "254",
+        "topic": "cmd/led/1/dim",
+        "payload": "100",
         "payloadType": "num",
-        "x": 670,
+        "x": 710,
         "y": 400,
         "wires": [
             [
@@ -486,10 +486,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "l1",
+        "topic": "cmd/led/1/dim",
         "payload": "85",
         "payloadType": "num",
-        "x": 670,
+        "x": 710,
         "y": 440,
         "wires": [
             [
@@ -535,10 +535,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "l1",
+        "topic": "cmd/led/1/dim",
         "payload": "",
         "payloadType": "date",
-        "x": 620,
+        "x": 580,
         "y": 500,
         "wires": [
             [
