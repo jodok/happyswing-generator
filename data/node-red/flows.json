@@ -16,6 +16,14 @@
         "env": []
     },
     {
+        "id": "84b2499cf6afc755",
+        "type": "tab",
+        "label": "accel-transform",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "8eaf2a1c4660fc1e",
         "type": "mqtt-broker",
         "name": "",
@@ -547,50 +555,6 @@
         ]
     },
     {
-        "id": "fde441519f1bcd99",
-        "type": "ui_chart",
-        "z": "ca954522561608c1",
-        "name": "",
-        "group": "",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "label": "chart",
-        "chartType": "line",
-        "legend": "false",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": false,
-        "ymin": "",
-        "ymax": "",
-        "removeOlder": 1,
-        "removeOlderPoints": "",
-        "removeOlderUnit": "3600",
-        "cutout": 0,
-        "useOneColor": false,
-        "useUTC": false,
-        "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "outputs": 1,
-        "useDifferentColor": false,
-        "className": "",
-        "x": 510,
-        "y": 280,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "a7f8cb778a6ebcc5",
         "type": "mqtt in",
         "z": "ca954522561608c1",
@@ -649,6 +613,169 @@
         "y": 360,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "d809d2e482c0df98",
+        "type": "mqtt in",
+        "z": "84b2499cf6afc755",
+        "name": "",
+        "topic": "accel/1",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0618b9716c8e5dc0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "b2ce3412ac62098b"
+            ]
+        ]
+    },
+    {
+        "id": "7e5e0668823f3014",
+        "type": "mqtt out",
+        "z": "84b2499cf6afc755",
+        "name": "",
+        "topic": "swing.update",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "0618b9716c8e5dc0",
+        "x": 590,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "b2ce3412ac62098b",
+        "type": "function",
+        "z": "84b2499cf6afc755",
+        "name": "accel-transform",
+        "func": "const activeThreshold = 10;\nconst maxIntensityThreshold = 45;\n\nconst clip = (value, min, max) => Math.max(Math.min(value, max), min);\n\nconst swing = parseInt(msg.topic.replaceAll(\"sw\", \"\"));\nconst active = msg.payload.rms > activeThreshold;\nconst intensity = Math.round(5 * clip(msg.payload.rms / maxIntensityThreshold, 0, 1))\n\nreturn { payload: { swing, active, intensity } };",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 300,
+        "wires": [
+            [
+                "7e5e0668823f3014"
+            ]
+        ]
+    },
+    {
+        "id": "e29008e33f0f9daf",
+        "type": "mqtt in",
+        "z": "84b2499cf6afc755",
+        "name": "",
+        "topic": "accel/2",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0618b9716c8e5dc0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "b2ce3412ac62098b"
+            ]
+        ]
+    },
+    {
+        "id": "9ccf1f99370b24f0",
+        "type": "mqtt in",
+        "z": "84b2499cf6afc755",
+        "name": "",
+        "topic": "accel/3",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0618b9716c8e5dc0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 260,
+        "wires": [
+            [
+                "b2ce3412ac62098b"
+            ]
+        ]
+    },
+    {
+        "id": "ac322a534c126cea",
+        "type": "mqtt in",
+        "z": "84b2499cf6afc755",
+        "name": "",
+        "topic": "accel/4",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0618b9716c8e5dc0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 340,
+        "wires": [
+            [
+                "b2ce3412ac62098b"
+            ]
+        ]
+    },
+    {
+        "id": "ceaae50ff91b7b1b",
+        "type": "mqtt in",
+        "z": "84b2499cf6afc755",
+        "name": "",
+        "topic": "accel/5",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0618b9716c8e5dc0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 400,
+        "wires": [
+            [
+                "b2ce3412ac62098b"
+            ]
+        ]
+    },
+    {
+        "id": "be19903068907d90",
+        "type": "mqtt in",
+        "z": "84b2499cf6afc755",
+        "name": "",
+        "topic": "accel/6",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0618b9716c8e5dc0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 460,
+        "wires": [
+            [
+                "b2ce3412ac62098b"
+            ]
         ]
     }
 ]
