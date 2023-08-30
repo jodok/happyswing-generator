@@ -659,7 +659,7 @@
         "type": "function",
         "z": "84b2499cf6afc755",
         "name": "accel-transform",
-        "func": "const activeThreshold = 10;\nconst maxIntensityThreshold = 45;\n\nconst clip = (value, min, max) => Math.max(Math.min(value, max), min);\n\nconst swing = parseInt(msg.topic.replaceAll(\"sw\", \"\"));\nconst active = msg.payload.rms > activeThreshold;\nconst intensity = Math.round(5 * clip(msg.payload.rms / maxIntensityThreshold, 0, 1))\n\nreturn { payload: { swing, active, intensity } };",
+        "func": "const activeThreshold = 10;\nconst maxIntensityThreshold = 45;\n\nconst clip = (value, min, max) => Math.max(Math.min(value, max), min);\n\nconst {ts, rms} = msg.payload;\n\nconst swing = parseInt(msg.topic.replaceAll(\"accel/\", \"\"));\nconst active = rms > activeThreshold;\nconst intensity = Math.round(5 * clip(rms / maxIntensityThreshold, 0, 1))\n\nreturn { payload: { swing, ts, intensity } };",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
