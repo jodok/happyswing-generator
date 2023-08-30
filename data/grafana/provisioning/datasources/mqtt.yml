@@ -10,3 +10,14 @@ datasources:
       uri: "tcp://emqx:1883"
     isDefault: true
     editable: true
+  - name: mqtt.happyswing.at
+    type: grafana-mqtt-datasource
+    access: proxy
+    orgId: 1
+    uid: "c1725db8-86ef-4a16-9080-bc6833307055"
+    jsonData:
+      uri: "tcp://mqtt.happyswing.at:1883"
+      username: happyswing
+      password: mohapmohap!
+    isDefault: false
+    editable: true
